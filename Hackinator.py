@@ -30,31 +30,32 @@ def get_valid_input(prompt):
 def filter_database(property):
     """Filters the database based on user response and removes non-matching characters"""
     global database
-    answer = get_valid_input(f"Is your character {property.replace('_', ' ')} (y/n)? ")
+    if len(database) <= 1:  # If only one character remains, stop filtering
+        return
+
+    answer = get_valid_input(f"Is your character {property.replace('_', ' ')}? (y/n): ")
     database = [d for d in database if d[property] == answer]
 
     if len(database) == 1:
-        print(f"Your character is {database[0]['name']}! 🎉")
+        print(f"\n🎉 Your character is {database[0]['name']}! 🎉")
         quit()
     elif len(database) == 0:
-        print("No matching character found based on your answers! 😕")
+        print("\n😕 No matching character found based on your answers! Try again.")
         quit()
 
 
 # Start the game
 print("Welcome to Hackinator! Answer the following Yes/No questions:")
 
-filter_database("human")
-filter_database("male")
-filter_database("famous")
-filter_database("indian")
-filter_database("movie")
-filter_database("cricketer")
-filter_database("scientist")
-filter_database("politics")
+# Properties to check
+properties = ["human", "male", "famous", "indian", "movie", "cricketer", "scientist", "politics"]
 
-# If multiple options remain, let the user know
+for prop in properties:
+    filter_database(prop)
+
+# If multiple options remain, display possible matches
 if len(database) > 1:
-    print("Hmm... I'm not sure. Here are the possible matches:")
+    print("\n🤔 Hmm... I'm not sure. Here are the possible matches:")
     for character in database:
         print(f"- {character['name']}")
+    print("Try refining your answers next time! 🔄")
